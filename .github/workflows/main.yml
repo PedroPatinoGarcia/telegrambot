@@ -21,10 +21,16 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      
       -
         name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+        run: |
+          # Obtener la etiqueta en minúsculas
+          TAG=$(echo "${{ github.event_name }}-${{ github.sha }}" | tr '[:upper:]' '[:lower:]')
+
+          # Construir y subir la imagen con la etiqueta en minúsculas
+          docker buildx build --tag "${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${TAG}" --push .
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
