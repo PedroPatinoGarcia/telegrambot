@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
-from taboas import *
+from tablas import *
 
 # Authentication to manage the bot
 import os
