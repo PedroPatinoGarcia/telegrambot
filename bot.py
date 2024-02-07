@@ -2,11 +2,13 @@ import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
 from tablas import *
+from meteorologica import *
+
 
 # Authentication to manage the bot
 import os
-TOKEN = os.getenv('TOKEN')
-# TOKEN = ('6324615029:AAEOjwu6GpKem8zZYVblrNntZGOedUQs3gc')
+# TOKEN = os.getenv('TOKEN')
+TOKEN = ('6669467366:AAHzFN8k4CEIJW4SxLwz8j-83Xqk0AhPvMY')
 
 if TOKEN==None:
     print('Indica la variable TOKEN')
@@ -22,14 +24,24 @@ logging.basicConfig(
 
 # This function responds to start command handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="Son un bot, dime algo!")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="Que tal amigo, estamos funcionando!")
 
 # This function responds to echo handler
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
     
 async def table7(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=taboa_do_7()) 
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=tabla_del_7()) 
+
+async def informe_tiempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    ciudad_predefinida = 'A Coruña'
+    api_key_openweather = 'da045a14d2569ca4174024534a757ed8'
+    informe_meteorologico = obtener_informe_meteorologico(ciudad_predefinida, api_key_openweather)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=informe_meteorologico)
+
+# Agrega el nuevo manejador al código principal
+
+
     
 # function
 async def afirmador(update, context):
@@ -55,6 +67,9 @@ if __name__ == '__main__':
     
     table7_handler = CommandHandler('table7', table7)
     application.add_handler(table7_handler)
+
+    informe_tiempo_handler = CommandHandler('tiempo', informe_tiempo)
+    application.add_handler(informe_tiempo_handler)
     
     #handler
     application.add_handler(MessageHandler(filters.Document.ALL, afirmador))
