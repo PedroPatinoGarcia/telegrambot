@@ -3,6 +3,7 @@ from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
 from tablas import *
 from meteorologica import *
+from apod import *
 
 
 # Authentication to manage the bot
@@ -39,9 +40,17 @@ async def informe_tiempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     informe_meteorologico = obtener_informe_meteorologico(ciudad_predefinida, api_key_openweather)
     await context.bot.send_message(chat_id=update.effective_chat.id, text=informe_meteorologico)
 
-# Agrega el nuevo manejador al código principal
+async def obtener_apod(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    api_key_nasa = 'lt6l5JzgNDqzuR6M8ZYNpJSUEUdYG9BAuV3eAoZF'      
+    apod = obtener_apod_nasa(api_key_nasa)
 
+    if apod:
+        titulo, descripcion, url_imagen = apod
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Título: {titulo}\nDescripción: {descripcion}')
 
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=url_imagen)
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text='Error al obtener la APOD')
     
 # function
 async def afirmador(update, context):
@@ -70,6 +79,9 @@ if __name__ == '__main__':
 
     informe_tiempo_handler = CommandHandler('tiempo', informe_tiempo)
     application.add_handler(informe_tiempo_handler)
+
+    obtener_apod_handler = CommandHandler('apod', obtener_apod)
+    application.add_handler(obtener_apod_handler)
     
     #handler
     application.add_handler(MessageHandler(filters.Document.ALL, afirmador))
