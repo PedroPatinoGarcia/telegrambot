@@ -1,6 +1,6 @@
 FROM python:3.9-slim
 
-COPY apod.py bot.py meteorologica.py requirements.txt resposta.txt tablas.py /
+COPY apod.py bot.py chucknorris.py meteorologica.py requirements.txt resposta.txt tablas.py /
 
 RUN pip install -r requirements.txt
 

@@ -4,6 +4,7 @@ from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHan
 from tablas import *
 from meteorologica import *
 from apod import *
+from chucknorris import *
 
 # Authentication to manage the bot
 import os
@@ -58,6 +59,12 @@ async def obtener_apod(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=url_imagen)
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Error al obtener la APOD')
+
+async def chistecito(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chiste_buenisimo = obtener_chiste()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=chiste_buenisimo)
+
+
     
 # function
 async def afirmador(update, context):
@@ -89,7 +96,11 @@ if __name__ == '__main__':
 
     obtener_apod_handler = CommandHandler('apod', obtener_apod)
     application.add_handler(obtener_apod_handler)
-    
+
+    chistecito_handler = CommandHandler('txistaco', chistecito)
+    application.add_handler(chistecito_handler)
+
+
     #handler
     application.add_handler(MessageHandler(filters.Document.ALL, afirmador))
     
