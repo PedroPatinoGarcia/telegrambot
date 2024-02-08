@@ -5,16 +5,23 @@ from tablas import *
 from meteorologica import *
 from apod import *
 
-
 # Authentication to manage the bot
 import os
-# TOKEN = os.getenv('TOKEN')
-TOKEN = ('6669467366:AAHzFN8k4CEIJW4SxLwz8j-83Xqk0AhPvMY')
 
-if TOKEN==None:
-    print('Indica la variable TOKEN')
-    print('docker run --rm -e TOKEN-tu_token "nombrebot"')
+token_file_path = "token.txt"
+
+try:
+    with open(token_file_path, "r") as file:
+        TOKEN = file.read().strip()
+except FileNotFoundError:
+    print(f'No se encontró el archivo {token_file_path}. Proporcione el archivo de token adecuado.')
     exit(1)
+
+if not TOKEN:
+    print('Indica la variable TOKEN')
+    print('docker run --rm -e TOKEN=tu_token "nombrebot"')
+    exit(1)
+
     
 # Show logs in terminal
 logging.basicConfig(
