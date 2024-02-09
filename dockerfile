@@ -1,7 +1,8 @@
 FROM python:3.9-slim
 
-COPY apod.py bot.py chucknorris.py meteorologica.py requirements.txt resposta.txt tablas.py /
+COPY modules/ /modules/
+COPY main.py requirements.txt resposta.txt /
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "./bot.py"]
+CMD ["python", "./main.py"]

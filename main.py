@@ -1,11 +1,11 @@
 import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
-from tablas import *
-from meteorologica import *
-from apod import *
-from chucknorris import *
-from pokemon import *
+from modules.api.tablas import *
+from modules.api.meteorologica import *
+from modules.api.apod import *
+from modules.api.chucknorris import *
+from modules.api.perro import *
 
 # Authentication to manage the bot
 import os
@@ -65,26 +65,15 @@ async def chistecito(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chiste_buenisimo = obtener_chiste()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=chiste_buenisimo)
 
-async def obtener_pokemon(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    try:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="¡Hola! Por favor, introduce el número del Pokémon que quieres consultar.")
-        response = None
-        while response is None or not response.message.text.isdigit():
-            updates = await context.bot.get_updates()
-            response = updates[0] if updates else None
-            
-        numero_pokemon = int(response.message.text)
-        nombre, imagen_url, descripcion = obtener_datos_pokemon(numero_pokemon)
+async def perro(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    imagen_perro = obtener_imagen_perro()
 
-        if nombre and imagen_url and descripcion:
-            mensaje = f'Nombre: {nombre}\nDescripción: {descripcion}'
-            await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje)
-            await context.bot.send_photo(chat_id=update.effective_chat.id, photo=imagen_url)
-        else:
-            await context.bot.send_message(chat_id=update.effective_chat.id, text='No se encontraron datos para ese Pokémon.')
+    if imagen_perro is not None:
+        mensaje = f"Un colega: {imagen_perro}"
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje)
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="No se pudo obtener una imagen de perro.")
 
-    except Exception as e:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Error: {e}')
 
 # function
 async def afirmador(update, context):
@@ -120,7 +109,8 @@ if __name__ == '__main__':
     chistecito_handler = CommandHandler('txistaco', chistecito)
     application.add_handler(chistecito_handler)
 
-    application.add_handler(CommandHandler('pokemon', obtener_pokemon))
+    perro_handler = CommandHandler('perro', perro)
+    application.add_handler(perro_handler)
 
     #handler
     application.add_handler(MessageHandler(filters.Document.ALL, afirmador))
