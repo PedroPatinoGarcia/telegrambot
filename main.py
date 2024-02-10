@@ -6,11 +6,13 @@ from modules.api.meteorologica import *
 from modules.api.apod import *
 from modules.api.chucknorris import *
 from modules.api.perro import *
+from modules.convert.csv2json import *
+from modules.convert.json2csv import *
 
 # Authentication to manage the bot
 import os
 
-token_file_path = "token.txt"
+token_file_path = "docs/token.txt"
 
 try:
     with open(token_file_path, "r") as file:
@@ -74,15 +76,29 @@ async def perro(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="No se pudo obtener una imagen de perro.")
 
+async def afirmador(update, context):
+    file = await context.bot.get_file(update.message.document)
+    filename = update.message.document.file_name
+    await file.download_to_drive(filename)
+    if filename.endswith('.csv'):
+        with open(filename, 'r') as csv_file:
+            csv_content = csv_file.read()
+        json_content = csv_to_json(csv_content)
+        json_filename = os.path.join(os.path.dirname(filename), os.path.splitext(filename)[0] + '.json')
+        with open(json_filename, 'w') as json_file:
+            json_file.write(json_content)
+        with open(json_filename, 'rb') as json_file:
+            await context.bot.send_document(chat_id=update.effective_chat.id, document=json_file)
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text='El archivo no es un CSV')
 
 # function
 async def afirmador(update, context):
     file = await context.bot.get_file(update.message.document)
     filename = update.message.document.file_name
-    await file.download_to_drive(filename)
-  
+    await file.download_to_drive(filename)  
    # envía ficheiro de resposta
-    answer = open('resposta.txt', "rb")
+    answer = open('docs/resposta.txt', "rb")
     await context.bot.send_document(chat_id=update.effective_chat.id, document=answer)
 
 if __name__ == '__main__':
