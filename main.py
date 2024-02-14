@@ -6,8 +6,8 @@ from modules.api.meteorologica import *
 from modules.api.apod import *
 from modules.api.chucknorris import *
 from modules.api.perro import *
-from modules.convert.csv2json import *
-from modules.convert.json2csv import *
+from modules.convert.csvORjson import *
+
 
 # Authentication to manage the bot
 import os
@@ -76,30 +76,30 @@ async def perro(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="No se pudo obtener una imagen de perro.")
 
-async def afirmador(update, context):
-    file = await context.bot.get_file(update.message.document)
-    filename = update.message.document.file_name
-    await file.download_to_drive(filename)
-    if filename.endswith('.csv'):
-        with open(filename, 'r') as csv_file:
-            csv_content = csv_file.read()
-        json_content = csv_to_json(csv_content)
-        json_filename = os.path.join(os.path.dirname(filename), os.path.splitext(filename)[0] + '.json')
-        with open(json_filename, 'w') as json_file:
-            json_file.write(json_content)
-        with open(json_filename, 'rb') as json_file:
-            await context.bot.send_document(chat_id=update.effective_chat.id, document=json_file)
-    else:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text='El archivo no es un CSV')
 
-# function
-async def afirmador(update, context):
-    file = await context.bot.get_file(update.message.document)
-    filename = update.message.document.file_name
-    await file.download_to_drive(filename)  
-   # envía ficheiro de resposta
-    answer = open('docs/resposta.txt', "rb")
-    await context.bot.send_document(chat_id=update.effective_chat.id, document=answer)
+async def csv2json(update, context):
+    try:
+        file = await context.bot.get_file(update.message.document.file_id)
+        filename = update.message.document.file_name
+        downloaded_file_path = os.path.join(os.getcwd(), filename)
+        await file.download_to_drive(custom_path=downloaded_file_path)
+        tipo, response = csv_file(downloaded_file_path)
+
+        if tipo == "csvORjson":
+            document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.json'
+        else:  # tipo == "json2csv"
+            document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.csv'
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+        if os.path.isfile(document_path):
+            document = open(document_path, "rb")
+            await context.bot.send_document(chat_id=update.effective_chat.id, document=document)
+        else:
+            await context.bot.send_message(chat_id=update.effective_chat.id, text="Error al enviar el documento.")
+
+    except Exception as e:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error: {str(e)}")
+
 
 if __name__ == '__main__':
     # Start the application to operate the bot
@@ -128,8 +128,7 @@ if __name__ == '__main__':
     perro_handler = CommandHandler('perro', perro)
     application.add_handler(perro_handler)
 
-    #handler
-    application.add_handler(MessageHandler(filters.Document.ALL, afirmador))
+    application.add_handler(MessageHandler(filters.Document.ALL, csv2json))
     
     # Keeps the application running
     application.run_polling()
