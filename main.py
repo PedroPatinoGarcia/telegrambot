@@ -7,6 +7,9 @@ from modules.api.apod import *
 from modules.api.chucknorris import *
 from modules.api.perro import *
 from modules.convert.csvORjson import *
+from modules.scrapping.diario import *
+from modules.scrapping.cartelera import *
+from modules.bbdd.inferno import *
 
 
 # Authentication to manage the bot
@@ -87,7 +90,7 @@ async def csv2json(update, context):
 
         if tipo == "csvORjson":
             document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.json'
-        else:  # tipo == "json2csv"
+        else: #tipo == "json2csv"
             document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.csv'
         await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
@@ -99,6 +102,28 @@ async def csv2json(update, context):
 
     except Exception as e:
         await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error: {str(e)}")
+
+async def diario(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    DxTcampeon = obtener_diario()
+    
+    # Verifica si la lista no está vacía antes de enviar el mensaje
+    if DxTcampeon:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=diario, parse_mode='HTML')
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron titulares.")
+
+
+async def cartelera(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    YelmoCines = obtener_cartelera()
+    
+    # Verifica si la lista no está vacía antes de enviar el mensaje
+    if YelmoCines:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=cartelera, parse_mode='HTML')
+    else:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron peliculas.")
+
+async def inferno(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=destino('Pedro'))
 
 
 if __name__ == '__main__':
@@ -129,6 +154,15 @@ if __name__ == '__main__':
     application.add_handler(perro_handler)
 
     application.add_handler(MessageHandler(filters.Document.ALL, csv2json))
+
+    dxt_handler = CommandHandler('diario', diario)
+    application.add_handler(dxt_handler)
+
+    cartelera_handler = CommandHandler('cartelera', cartelera)
+    application.add_handler(cartelera_handler)
+
+    bbdd_handler = CommandHandler('inferno', inferno)
+    application.add_handler(bbdd_handler)
     
     # Keeps the application running
     application.run_polling()
