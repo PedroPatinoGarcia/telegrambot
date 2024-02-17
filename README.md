@@ -52,8 +52,6 @@ Introducir el TOKEN generado en el archivo `token.txt`
 
 `/start`
 
-`/table7`
-
 `/tiempo`
 
 `/apod`
