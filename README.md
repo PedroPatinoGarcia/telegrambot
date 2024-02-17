@@ -66,7 +66,7 @@ Introducir el TOKEN generado en el archivo `token.txt`
 
 `/inferno`
 
-### Instrucciones dockerizacion
+## Instrucciones dockerizacion
 
 `-docker build -t user_hub/nome_imaxe:latest .`
 
@@ -82,6 +82,6 @@ Introducir el TOKEN generado en el archivo `token.txt`
 
 **--Se recomienda crear CI/CD para crear automatizacion en Github y crear una nueva imagen en cada push--**
 
-### Enlace imagen DOCKER
+## Enlace imagen DOCKER
 
 `https://hub.docker.com/repository/docker/pedropatinodev/telegrambot/general`
