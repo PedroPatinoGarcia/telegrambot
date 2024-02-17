@@ -44,7 +44,7 @@ Introducir el TOKEN generado en el archivo `token.txt`
 
 ### Desde terminal
 
-`-python bot.py`
+`-python main.py`
 
 ## ⚙️Comandos
 
