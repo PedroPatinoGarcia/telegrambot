@@ -10,18 +10,20 @@ def obtener_diario():
         response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
-        elementos_front_title = soup.find_all(class_='article-summary-header')
+        elementos_article = soup.find_all(class_='article-summary-header')
 
         titulares_enlaces = []
 
-        for elemento in elementos_front_title:
+        for elemento in elementos_article:
             texto_titular = elemento.find('h2').get_text(strip=True)
             enlace = elemento.find('a')
 
             if enlace:
                 enlace_titular = enlace['href']
                 enlace_completo = f'https://praza.gal{enlace_titular}'
-                titulares_enlaces.append([texto_titular, enlace_completo])
+                titulares_enlaces.append((texto_titular, enlace_completo))
+                                                        # '\n'
+                
 
         return titulares_enlaces
     except requests.exceptions.RequestException as e:
