@@ -1,7 +1,6 @@
 import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
-from modules.api.tablas import *
 from modules.api.meteorologica import *
 from modules.api.apod import *
 from modules.api.chucknorris import *
