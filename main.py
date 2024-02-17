@@ -45,9 +45,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
     
-async def table7(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=tabla_del_7()) 
-
 async def informe_tiempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ciudad_predefinida = 'A Coruña'
     api_key_openweather = 'da045a14d2569ca4174024534a757ed8'
@@ -136,9 +133,6 @@ if __name__ == '__main__':
     echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
     application.add_handler(echo_handler)
     
-    table7_handler = CommandHandler('table7', table7)
-    application.add_handler(table7_handler)
-
     informe_tiempo_handler = CommandHandler('tiempo', informe_tiempo)
     application.add_handler(informe_tiempo_handler)
 
