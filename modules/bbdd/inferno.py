@@ -21,4 +21,4 @@ def destino(name):
         return f'Error: {e}'
     finally:
         if conexion:
-            conexion.close()   
+            conexion.close()

@@ -103,12 +103,13 @@ async def csv2json(update, context):
     except Exception as e:
         await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error: {str(e)}")
 
+        
 async def diario(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    DxTcampeon = obtener_diario()
-    
-    # Verifica si la lista no está vacía antes de enviar el mensaje
-    if DxTcampeon:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=diario, parse_mode='HTML')
+    titulares_diario = obtener_diario()
+
+    if titulares_diario:
+        mensaje = '\n\n'.join(titulares_diario)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje, parse_mode='HTML')
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron titulares.")
 
@@ -116,11 +117,12 @@ async def diario(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cartelera(update: Update, context: ContextTypes.DEFAULT_TYPE):
     YelmoCines = obtener_cartelera()
     
-    # Verifica si la lista no está vacía antes de enviar el mensaje
     if YelmoCines:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=cartelera, parse_mode='HTML')
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=YelmoCines, parse_mode='HTML')
     else:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron peliculas.")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron películas.")
+
+
 
 async def inferno(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=destino('Pedro'))
