@@ -86,17 +86,13 @@ async def csv2json(update, context):
         filename = update.message.document.file_name
         downloaded_file_path = os.path.join(os.getcwd(), filename)
         await file.download_to_drive(custom_path=downloaded_file_path)
-        tipo, response = csv_file(downloaded_file_path)
+        tipo, response, converted_file_path = csv_file(downloaded_file_path)
 
-        if tipo == "csvORjson":
-            document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.json'
-        else: #tipo == "json2csv"
-            document_path = f'{os.path.splitext(os.path.basename(filename))[0]}.csv'
         await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
-        if os.path.isfile(document_path):
-            document = open(document_path, "rb")
-            await context.bot.send_document(chat_id=update.effective_chat.id, document=document)
+        if os.path.isfile(converted_file_path):
+            converted_file = open(converted_file_path, "rb")
+            await context.bot.send_document(chat_id=update.effective_chat.id, document=converted_file)
         else:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="Error al enviar el documento.")
 

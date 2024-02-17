@@ -14,7 +14,7 @@ def destino(name):
 
         if result:
             nivel, nome_nivel = result
-            return f'Estoy en el {nivel}ª nivel. El pecado "{nome_nivel}"'
+            return f'Estoy en el {nivel}ª nivel. El pecado es la "{nome_nivel}"'
         else:
             return 'No se encontraron resultados para el nombre proporcionado.'
     except Exception as e:
