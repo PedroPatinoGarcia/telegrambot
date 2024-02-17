@@ -104,7 +104,7 @@ async def diario(update: Update, context: ContextTypes.DEFAULT_TYPE):
     titulares_diario = obtener_diario()
 
     if titulares_diario:
-        mensaje = '\n\n'.join(titulares_diario)
+        mensaje = (titulares_diario)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje, parse_mode='HTML')
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="No se encontraron titulares.")
