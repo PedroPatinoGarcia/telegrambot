@@ -5,7 +5,9 @@ def obtener_cartelera():
     url = 'https://www.cantonescines.com/peliculas/cartelera'
     
     try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         
@@ -22,6 +24,8 @@ def obtener_cartelera():
                 titulo_pelicula = titulo_elemento.get_text(strip=True)
                 peliculas_enlaces.append((titulo_pelicula, enlace))
                 
+        peliculas_enlaces.sort(key=lambda x: x[0].lower())
+        
         return peliculas_enlaces
     except requests.exceptions.RequestException as e:
         print(f"Error al obtener la cartelera: {e}")

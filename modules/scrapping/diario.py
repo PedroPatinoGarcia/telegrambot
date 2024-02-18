@@ -22,8 +22,8 @@ def obtener_diario():
                 enlace_titular = enlace['href']
                 enlace_completo = f'https://praza.gal{enlace_titular}'
                 titulares_enlaces.append((texto_titular, enlace_completo))
-                                                        # '\n'
                 
+        titulares_enlaces.sort(key=lambda x: x[0].lower())
 
         return titulares_enlaces
     except requests.exceptions.RequestException as e:
